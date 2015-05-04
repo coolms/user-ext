@@ -11,12 +11,21 @@
 namespace CmsUserExt;
 
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface,
-    Zend\ModuleManager\Feature\ConfigProviderInterface;
+    Zend\ModuleManager\Feature\ConfigProviderInterface,
+    Zend\ModuleManager\ModuleManager;
 
 class Module implements
     AutoloaderProviderInterface,
     ConfigProviderInterface
 {
+    /**
+     * @param ModuleManager $moduleManager
+     */
+    public function init(ModuleManager $moduleManager)
+    {
+        $moduleManager->loadModule('CmsUser');
+    }
+
     /**
      * {@inheritDoc}
      */
