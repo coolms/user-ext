@@ -11,11 +11,18 @@
 namespace CmsUserExt;
 
 return [
-    'cmsauthorization' => [
-        'guards' => [
-            'CmsAuthorization\Guard\Route' => [
-                ['route' => 'cms-user/ext', 'roles' => ['user']],
-                ['route' => 'cms-admin/user/ext', 'roles' => ['admin']],
+    'cmspermissions' => [
+        'acl' => [
+            'guards' => [
+                'CmsAcl\Guard\Route' => [
+                    ['route' => 'cms-user/ext', 'roles' => ['user'], 'assertion' => ['CmsUserExt\Acl\UserActionAssertion']],
+                    ['route' => 'cms-admin/user/ext', 'roles' => ['admin']],
+                ],
+            ],
+            'assertion_manager' => [
+                'factories' => [
+                    'CmsUserExt\Acl\UserActionAssertion' => 'CmsUserExt\Factory\Acl\UserActionAssertionFactory',
+                ],
             ],
         ],
     ],
@@ -24,9 +31,54 @@ return [
             'CmsUserExt\Controller\Admin' => 'CmsUserExt\Mvc\Controller\AdminController',
             'CmsUserExt\Controller\User' => 'CmsUserExt\Mvc\Controller\UserController',
         ],
+        'factories' => [
+            'CmsUserExt\Mvc\Controller\UserController' => 'CmsUserExt\Factory\Controller\UserControllerFactory',
+        ],
         'invokables' => [
             'CmsUserExt\Mvc\Controller\AdminController' => 'CmsUserExt\Mvc\Controller\AdminController',
-            'CmsUserExt\Mvc\Controller\UserController' => 'CmsUserExt\Mvc\Controller\UserController',
+        ],
+    ],
+    'navigation' => [
+        'cmsuser' => [
+            [
+                'label' => 'Add individual data',
+                'text_domain' => __NAMESPACE__,
+                'route' => 'cms-user/ext',
+                'params' => ['action' => 'create'],
+                'resource' => 'route/cms-user/ext',
+                'privilege' => 'create',
+                'order' => 650,
+                'twbs' => [
+                    'icon' => [
+                        'type' => 'fa',
+                        'content' => 'pencil',
+                        'placement' => 'prepend',
+                        'tagName' => 'i',
+                    ],
+                ],
+            ],
+            [
+                'label' => 'Edit individual data',
+                'text_domain' => __NAMESPACE__,
+                'route' => 'cms-user/ext',
+                'params' => ['action' => 'update'],
+                'resource' => 'route/cms-user/ext',
+                'privilege' => 'update',
+                'order' => 650,
+                'twbs' => [
+                    'icon' => [
+                        'type' => 'fa',
+                        'content' => 'pencil',
+                        'placement' => 'prepend',
+                        'tagName' => 'i',
+                    ],
+                ],
+            ],
+            [
+                'order' => 700,
+                'uri' => '',
+                'class' => 'divider',
+            ],
         ],
     ],
     'router' => [

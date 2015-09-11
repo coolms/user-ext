@@ -1,8 +1,8 @@
 <?php 
 /**
- * CoolMS2 User extensions module (http://www.coolms.com/)
- * 
- * @link      http://github.com/coolms/CmsUserExt for the canonical source repository
+ * CoolMS2 User Extensions Module (http://www.coolms.com/)
+ *
+ * @link      http://github.com/coolms/user-ext for the canonical source repository
  * @copyright Copyright (c) 2006-2015 Altgraphic, ALC (http://www.altgraphic.com)
  * @license   http://www.coolms.com/license/new-bsd New BSD License
  * @author    Dmitry Popov <d.popov@altgraphic.com>
@@ -15,54 +15,15 @@ $this->formCollection()->setTranslatorTextDomain(__NAMESPACE__);
 $this->formLabel()->setTranslatorTextDomain(__NAMESPACE__);
 $this->formMessages()->setTranslatorTextDomain(__NAMESPACE__);
 $this->formRow()->setTranslatorTextDomain(__NAMESPACE__);
+$this->label()->setTranslatorTextDomain(__NAMESPACE__);
 
 // Set form fields classes and placeholders here
-
-$form = $this->form;
-
-$form->setAttributes([
-        'class' => 'form-horizontal cms-form cms-user-ext-form cms-user-ext-form-metadata',
-        'role'  => 'form',
-    ])->setLabelAttributes([
-        'twb'   => ['class' => 'panel-title'],
-    ]);
-
-$form->get('submit')->setOptions([
-        'twb' => [
-            'decorators' => [
-                'col' => ['class' => 'col-xs-12 col-sm-8'],
-                'formGroup' => ['elements' => 'reset'],
-            ],
-        ],
-    ]);
-
-$form->get('reset')->setOptions([
-        'twb' => [
-            'decorators' => [
-                'col' => ['class' => 'col-xs-12 col-sm-4'],
-            ],
-        ],
-    ]);
-
-$form->prepare();
+$this->form->setLabelOption('twbs', [
+    'element' => [
+        'type' => 'label',
+        'class' => 'panel-title',
+    ],
+]);
 
 ?>
-<?= $this->form()->openTag($form); ?>
-  <div class="panel panel-primary">
-    <?php if ($form->getLabel()): ?>
-    <div class="panel-heading">
-      <?= $this->glyphicon('user'); ?>&nbsp;&nbsp;<?= $this->formLabel($form); ?>
-    </div>
-    <?php endif; ?>
-    <div class="panel-body">
-      <?= $this->formMessages($form); ?>
-      <?= $this->formCollection($this->fieldset ?: $form->get('extMetadata')); ?>
-    </div>
-    <div class="panel-footer clearfix">
-      <?php if ($form->hasCsrf()): ?>
-        <?= $this->formRow($form->getCsrf()); ?>
-      <?php endif; ?>
-      <?= $this->formRow($form->get('submit')); ?>
-    </div>
-  </div>
-<?= $this->form()->closeTag();
+<?= $this->formPanel($this->form);
