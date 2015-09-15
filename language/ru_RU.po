@@ -17,7 +17,7 @@ msgstr ""
 msgid "User"
 msgstr "Пользователь"
 
-msgid "Individual metadata"
+msgid "Extensional metadata"
 msgstr "Персональные данные"
 
 msgid "Individual address"
