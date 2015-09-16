@@ -14,7 +14,8 @@ use Zend\Permissions\Acl\Acl,
     Zend\Permissions\Acl\Assertion\AssertionInterface,
     Zend\Permissions\Acl\Resource\ResourceInterface,
     Zend\Permissions\Acl\Role\RoleInterface,
-    CmsUser\Mapping\UserInterface;
+    CmsUser\Mapping\UserInterface,
+    CmsUserExt\Mapping\MetadatableInterface;
 
 class UserActionAssertion implements AssertionInterface
 {
@@ -38,7 +39,7 @@ class UserActionAssertion implements AssertionInterface
      */
     public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null)
     {
-        if (!$this->identity) {
+        if (!$this->identity || !$this->identity instanceof MetadatableInterface) {
             return false;
         }
 
