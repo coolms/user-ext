@@ -20,11 +20,14 @@ msgstr "Пользователь"
 msgid "Extensional metadata"
 msgstr "Персональные данные"
 
+msgid "Individual metadata"
+msgstr "Личные данные"
+
 msgid "Individual address"
 msgstr "Домашний адрес"
 
 msgid "Contact metadata"
-msgstr "Персональные контактные данные"
+msgstr "Личные контактные данные"
 
 msgid "Description"
 msgstr "Коротко о себе"
@@ -42,16 +45,16 @@ msgid "Reset"
 msgstr "Сброс"
 
 msgid "Data has been successfully saved"
-msgstr "Персональные данные успешно сохранены"
+msgstr "Личные данные успешно сохранены"
 
 msgid "Update data"
 msgstr "Обновить данные"
 
 msgid "Edit individual data"
-msgstr "Редактировать персональные данные"
+msgstr "Редактировать личные данные"
 
 msgid "Add individual data"
-msgstr "Добавить персональные данные"
+msgstr "Добавить личные данные"
 
 msgid "Select your gender"
 msgstr "Укажите Ваш пол"

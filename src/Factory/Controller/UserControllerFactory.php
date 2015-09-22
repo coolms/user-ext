@@ -25,7 +25,7 @@ class UserControllerFactory implements FactoryInterface
     {
         $services = $controllers->getServiceLocator();
         return new UserController(
-            $services->get('DomainServiceManager')->get('CmsUserExt\\Mapping\\MetadataInterface')
+            $services->get('DomainServiceManager')->get('CmsUser\\Mapping\\UserInterface')
         );
     }
 }

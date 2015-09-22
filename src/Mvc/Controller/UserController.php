@@ -15,20 +15,19 @@ use Zend\Http\PhpEnvironment\Response,
     Zend\Mvc\Controller\Plugin\FlashMessenger,
     Zend\View\Model\ViewModel,
     CmsCommon\Service\DomainServiceInterface;
+use CmsUser\Service\UserServiceAwareTrait;
+use CmsUser\Service\UserServiceInterface;
 
 class UserController extends AbstractActionController
 {
-    /**
-     * @var DomainServiceInterface
-     */
-    protected $userExtService;
+    use UserServiceAwareTrait;
 
     /**
      * __construct
      */
-    public function __construct(DomainServiceInterface $userExtService)
+    public function __construct(UserServiceInterface $userService)
     {
-        $this->userExtService = $userExtService;
+        $this->setUserService($userService);
     }
 
     /**
@@ -111,7 +110,7 @@ class UserController extends AbstractActionController
     public function updateAction()
     {
         $identity = $this->cmsAuthentication()->getIdentity();
-        if (!($data = $identity->getExtMetadata())) {
+        if (!$identity->getExtMetadata()) {
             return $this->redirect()->toRoute(null, ['action' => 'create']);
         }
 
@@ -126,20 +125,22 @@ class UserController extends AbstractActionController
             $post = [];
         }
 
-        $form = $this->userExtService->getForm();
+        $form = $this->getUserService()->getForm();
         $form->setAttribute('action', $url);
-        $form->bind($data);
+        $form->bind($identity);
         $form->setElementGroup([
-            'gender',
-            'description',
-            'annotation',
-            'individualAddress',
-            'contactMetadata' => [
-                'phones',
-                'emails',
-                'websites',
-                'messengers',
-                'socialNetworks',
+            'extMetadata' => [
+                'gender',
+                'description',
+                'annotation',
+                'individualAddress',
+                'contactMetadata' => [
+                    'phones',
+                    'emails',
+                    'websites',
+                    'messengers',
+                    'socialNetworks',
+                ],
             ],
         ]);
 
@@ -147,7 +148,7 @@ class UserController extends AbstractActionController
 
         if ($post && $form->setData($post)->isValid()) {
             $data = $form->getData();
-            $this->userExtService->getMapper()->save($data);
+            $this->getUserService()->getMapper()->save($data);
 
             $this->flashMessenger()
                 ->setNamespace($form->getName() . '-' . FlashMessenger::NAMESPACE_SUCCESS)
