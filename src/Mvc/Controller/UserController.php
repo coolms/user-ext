@@ -14,9 +14,8 @@ use Zend\Http\PhpEnvironment\Response,
     Zend\Mvc\Controller\AbstractActionController,
     Zend\Mvc\Controller\Plugin\FlashMessenger,
     Zend\View\Model\ViewModel,
-    CmsCommon\Service\DomainServiceInterface;
-use CmsUser\Service\UserServiceAwareTrait;
-use CmsUser\Service\UserServiceInterface;
+    CmsUser\Service\UserServiceAwareTrait,
+    CmsUser\Service\UserServiceInterface;
 
 class UserController extends AbstractActionController
 {
@@ -24,6 +23,8 @@ class UserController extends AbstractActionController
 
     /**
      * __construct
+     *
+     * @param UserServiceInterface $userService
      */
     public function __construct(UserServiceInterface $userService)
     {
@@ -65,40 +66,42 @@ class UserController extends AbstractActionController
             $post = [];
         }
 
-        $form = $this->userExtService->getForm();
+        $form = $this->getUserService()->getForm();
+        $form->setAttribute('action', $url);
+        $form->setElementGroup([
+            'extMetadata' => [
+                'gender',
+                'description',
+                'annotation',
+                'individualAddress',
+                'contactMetadata' => [
+                    'phones',
+                    'emails',
+                    'websites',
+                    'messengers',
+                    'socialNetworks',
+                ],
+            ],
+        ]);
+        $form->bind($identity);
 
         $viewModel = new ViewModel();
-        
-        if ($post) {
-            $validationGroup = [
-                'extMetadata' => [
-                    'gender',
-                    'description',
-                    'annotation',
-                    'individualAddress',
-                    'contactMetadata' => [
-                        'phones',
-                        'emails',
-                        'websites',
-                        'messengers',
-                        'socialNetworks',
-                    ],
-                ],
-            ];
-            $form->setValidationGroup($validationGroup);
-            
-            if ($service->save($post)) {
 
-                $this->flashMessenger()
-                    ->setNamespace($form->getName() . '-' . FlashMessenger::NAMESPACE_SUCCESS)
-                    ->addMessage('Data has been successfully saved');
+        if ($post && $form->setData($post)->isValid()) {
+            $identity = $form->getData();
+            $this->getUserService()->getMapper()->save($identity);
 
+            $this->flashMessenger()
+                ->setNamespace($form->getName() . '-' . FlashMessenger::NAMESPACE_SUCCESS)
+                ->addMessage('Data has been successfully saved');
+
+            if ($identity->getExtMetadata()) {
                 $url = $this->url()->fromRoute(null, ['action' => 'update']);
                 $form->setAttribute('action', $url);
                 $viewModel->setTemplate('cms-user-ext/user/update');
             }
         }
-        
+
         return $viewModel->setVariables(compact('form'));
     }
 
@@ -127,7 +130,6 @@ class UserController extends AbstractActionController
 
         $form = $this->getUserService()->getForm();
         $form->setAttribute('action', $url);
-        $form->bind($identity);
         $form->setElementGroup([
             'extMetadata' => [
                 'gender',
@@ -143,16 +145,23 @@ class UserController extends AbstractActionController
                 ],
             ],
         ]);
+        $form->bind($identity);
 
         $viewModel = new ViewModel();
 
         if ($post && $form->setData($post)->isValid()) {
-            $data = $form->getData();
-            $this->getUserService()->getMapper()->save($data);
+            $identity = $form->getData();
+            $this->getUserService()->getMapper()->save($identity);
 
             $this->flashMessenger()
                 ->setNamespace($form->getName() . '-' . FlashMessenger::NAMESPACE_SUCCESS)
                 ->addMessage('Data has been successfully saved');
+
+            if (!$identity->getExtMetadata()) {
+                $url = $this->url()->fromRoute(null, ['action' => 'create']);
+                $form->setAttribute('action', $url);
+                $viewModel->setTemplate('cms-user-ext/user/create');
+            }
         }
 
         return $viewModel->setVariables(compact('form'));
