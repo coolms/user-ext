@@ -12,6 +12,7 @@ namespace CmsUserExt\Factory\Controller;
 
 use Zend\ServiceManager\FactoryInterface,
     Zend\ServiceManager\ServiceLocatorInterface,
+    CmsUser\Mapping\UserInterface,
     CmsUserExt\Mvc\Controller\UserController;
 
 class UserControllerFactory implements FactoryInterface
@@ -25,7 +26,7 @@ class UserControllerFactory implements FactoryInterface
     {
         $services = $controllers->getServiceLocator();
         return new UserController(
-            $services->get('DomainServiceManager')->get('CmsUser\\Mapping\\UserInterface')
+            $services->get('DomainServiceManager')->get(UserInterface::class)
         );
     }
 }

@@ -10,7 +10,8 @@
 
 namespace CmsUserExt\Factory\Acl;
 
-use Zend\ServiceManager\FactoryInterface,
+use Zend\Authentication\AuthenticationServiceInterface,
+    Zend\ServiceManager\FactoryInterface,
     Zend\ServiceManager\ServiceLocatorInterface,
     CmsUserExt\Acl\UserActionAssertion;
 
@@ -25,7 +26,7 @@ class UserActionAssertionFactory implements FactoryInterface
     {
         $services = $assertions->getServiceLocator();
         return new UserActionAssertion(
-            $services->get('Zend\Authentication\AuthenticationServiceInterface')->getIdentity()
+            $services->get(AuthenticationServiceInterface::class)->getIdentity()
         );
     }
 }
