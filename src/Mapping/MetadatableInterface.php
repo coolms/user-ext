@@ -14,6 +14,7 @@ interface MetadatableInterface
 {
     /**
      * @param MetadataInterface $metadata
+     * @return self
      */
     public function setExtMetadata(MetadataInterface $metadata);
 

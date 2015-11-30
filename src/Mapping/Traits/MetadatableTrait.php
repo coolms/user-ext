@@ -30,6 +30,7 @@ trait MetadatableTrait
 
     /**
      * @param MetadataInterface $metadata
+     * @return self
      */
     public function setExtMetadata(MetadataInterface $metadata)
     {
@@ -37,6 +38,8 @@ trait MetadatableTrait
         if (!$metadata->getUser()) {
             $metadata->setUser($this);
         }
+
+        return $this;
     }
 
     /**
